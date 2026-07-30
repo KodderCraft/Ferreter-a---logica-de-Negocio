@@ -1,6 +1,220 @@
 {% load static %}
 {% include 'private/header.html' %}
 <div class="container">
+    <div class="page-inner">
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- 1. SELECCIÓN DE CLIENTE -->
+            <div class="mb-3">
+                <label class="form-label">Cliente</label>
+                <select name="cliente_id" id="cliente" class="form-control">
+                    <option value="">Seleccione un cliente</option>
+                    {% for c in clientes %}
+                    <option value="{{ c.id }}">
+                        {{ c.nombre }} {{ c.apellido }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- 2. SELECCIÓN DE VENDEDOR / EMPLEADO -->
+            <div class="mb-3">
+                <label class="form-label">Empleado</label>
+                <select name="empleado_id" id="empleado" class="form-control">
+                    <option value="">Seleccione un vendedor</option>
+                    {% for e in empleados %}
+                    <option value="{{ e.id }}">
+                        {{ e.nombre }} {{ e.apellido }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- 3. SELECCIÓN DE PRODUCTO -->
+            <div class="mb-3">
+                <label class="form-label">Producto</label>
+                <select name="producto_id" id="producto" class="form-control" required>
+                    <option value="">Seleccione un producto</option>
+                    {% for p in productos %}
+                    <option value="{{ p.id }}" data-precio="{{ p.precio_producto }}"
+                        data-stock="{{ p.stock_producto }}">
+                        {{ p.nombre_producto }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- CAMPOS DE DETALLE DE COMPRA -->
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Precio Unitario ($)</label>
+                    <input type="text" id="precio" class="form-control" readonly placeholder="0.00">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Stock disponible</label>
+                    <input type="text" id="stock" class="form-control" readonly placeholder="0">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cantidad</label>
+                <input type="number" name="cantidad" id="cantidad" class="form-control" min="1"
+                    placeholder="Ingrese la cantidad" required>
+
+                <label class="form-label">Estado de la Venta</label>
+                <select name="estado_venta" id="estado_venta" class="form-control" required>
+                    <option value="PENDIENTE" selected>Pendiente</option>
+                    <option value="PAGADA" >Pagada</option>
+                </select>
+            </div>
+
+            <!-- CALCULOS AUTOMÁTICOS -->
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Subtotal ($)</label>
+                    <input type="text" id="subtotal" class="form-control" readonly placeholder="0.00">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">IVA (15%) ($)</label>
+                    <input type="text" id="iva" class="form-control" readonly placeholder="0.00">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Total ($)</label>
+                    <input type="text" id="total" class="form-control fw-bold" readonly placeholder="0.00">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Guardar Venta
+            </button>
+
+            <a href="{% url 'ventas_index' %}" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+
+
+        <!-- <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Producto</label>
+            <select name="producto_id" id="producto" class="form-control" required>
+                <option value="">Seleccione un producto</option>
+                {% for p in productos %}
+                <option
+                    value="{{ p.id }}"
+                    data-precio="{{ p.precio_producto }}"
+                    data-stock="{{ p.stock_producto }}">
+                    {{ p.nombre_producto }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Precio</label>
+            <input type="text" id="precio" class="form-control" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Stock disponible</label>
+            <input type="text" id="stock" class="form-control" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Cantidad</label>
+            <input
+                type="number"
+                name="cantidad"
+                id="cantidad"
+                class="form-control"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Subtotal</label>
+            <input type="text" id="subtotal" class="form-control" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">IVA (15%)</label>
+            <input type="text" id="iva" class="form-control" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Total</label>
+            <input type="text" id="total" class="form-control" readonly>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Guardar Venta
+        </button>
+
+        <a href="{% url 'ventas_index' %}" class="btn btn-secondary">
+            Cancelar
+        </a>
+    </form> -->
+
+    </div>
 
 </div>
 {% include 'private/footer.html' %}
+
+<script>
+    const producto = document.getElementById("producto");
+    const cantidad = document.getElementById("cantidad");
+
+    const precio = document.getElementById("precio");
+    const stock = document.getElementById("stock");
+    const subtotal = document.getElementById("subtotal");
+    const iva = document.getElementById("iva");
+    const total = document.getElementById("total");
+
+    // Variable para controlar que la alerta no se dispare repetidamente en bucle
+    let alertaMostrada = false;
+
+    function calcular() {
+        let opcion = producto.options[producto.selectedIndex];
+        let p = parseFloat(opcion.dataset.precio || 0);
+        let s = parseInt(opcion.dataset.stock || 0);
+        let c = parseInt(cantidad.value || 0);
+
+        // Alerta de stock interactiva
+        if (c > s && s > 0) {
+            if (!alertaMostrada) {
+                iziToast.warning({
+                    title: 'Atención',
+                    message: 'La cantidad ingresada (' + c + ') supera el stock disponible (' + s + ')',
+                    position: 'topRight'
+                });
+                alertaMostrada = true;
+            }
+        } else {
+            alertaMostrada = false; // Se resetea si corrige la cantidad
+        }
+
+        precio.value = p.toFixed(2);
+        stock.value = s;
+
+        let sub = p * c;
+        let iva15 = sub * 0.15;
+        let tot = sub + iva15;
+
+        subtotal.value = sub.toFixed(2);
+        iva.value = iva15.toFixed(2);
+        total.value = tot.toFixed(2);
+    }
+
+    producto.addEventListener("change", function () {
+        alertaMostrada = false;
+        calcular();
+    });
+    cantidad.addEventListener("keyup", calcular);
+    cantidad.addEventListener("change", calcular);
+</script>
