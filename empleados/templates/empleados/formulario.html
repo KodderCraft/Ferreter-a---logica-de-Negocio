@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Registrar Empleado
+{% endblock %}
+
+{% block contenido %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-8">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Registrar Empleado</h3>
+            </div>
+
+            <div class="card-body">
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre</label>
+                            {{ formulario.nombre_empleado }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Apellido</label>
+                            {{ formulario.apellido_empleado }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cédula</label>
+                            {{ formulario.cedula_empleado }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Correo</label>
+                            {{ formulario.correo_empleado }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Teléfono</label>
+                            {{ formulario.telefono_empleado }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cargo</label>
+                            {{ formulario.cargo_empleado }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Salario</label>
+                            {{ formulario.salario_empleado }}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha de ingreso</label>
+                            {{ formulario.fecha_ingreso }}
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <div class="form-check">
+                                {{ formulario.activo }}
+                                <label class="form-check-label">
+                                    Empleado Activo
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <button class="btn btn-success">
+                        Guardar Empleado
+                    </button>
+
+                    <a href="{% url 'empleados_index' %}"
+                       class="btn btn-secondary">
+                        Cancelar
+                    </a>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

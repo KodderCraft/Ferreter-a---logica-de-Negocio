@@ -1,0 +1,87 @@
+{% load static %}
+{% include 'private/header.html' %}
+
+<div class="container">
+    <div class="page-inner">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Lista de Clientes</h2>
+
+            <a href="{% url 'crear_cliente' %}" class="btn btn-success">
+                <i class="fa fa-plus"></i> Nuevo Cliente
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Clientes Registrados</h4>
+            </div>
+
+            <div class="card-body">
+
+                <table id="myTable" class="table table-bordered table-hover table-striped">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Cédula</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Teléfono</th>
+                            <th>Correo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for cliente in clientes %}
+
+                        <tr>
+
+                            <td>{{ cliente.cedula }}</td>
+                            <td>{{ cliente.nombres }}</td>
+                            <td>{{ cliente.apellidos }}</td>
+                            <td>{{ cliente.telefono }}</td>
+                            <td>{{ cliente.correo }}</td>
+
+                            <td>
+
+                                <a href="{% url 'editar_cliente' cliente.id %}" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-edit"></i>
+                                    Editar
+                                </a>
+
+                                <a href="{% url 'eliminar_cliente' cliente.id %}" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Está seguro de eliminar este cliente?')">
+
+                                    <i class="fa fa-trash"></i>
+                                    Eliminar
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% include 'private/footer.html' %}
+
+<script>
+    const table = new DataTable('#myTable', {
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+        }
+    });
+</script>
