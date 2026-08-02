@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+*.log
+
+
+# Entornos virtuales
+venv/
+env/
+
+# Editor
+.vscode/
+
+# Variables de entorno
+.env
