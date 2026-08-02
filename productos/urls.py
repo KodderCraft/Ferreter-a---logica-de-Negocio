@@ -8,4 +8,5 @@ from . import views
 # config/urls.py), asi que se evita desde el principio.
 urlpatterns = [
     path('', views.productos_index, name='productos_index'),
+    path('nuevo/', views.crear_producto, name='crear_producto'),
 ]

@@ -1,0 +1,70 @@
+{% load static %}
+{% include 'private/header.html' %}
+
+<div class="container">
+    <div class="page-inner">
+
+        <h3>{{ titulo }}</h3>
+        <br>
+
+        <!-- Este mismo template lo usan crear_producto y editar_producto:
+             la vista decide el 'titulo' y si 'form' viene vacio o con
+             instance= (producto existente ya cargado). -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.nombre_producto.label }}</label>
+                {{ form.nombre_producto }}
+                {% if form.nombre_producto.errors %}
+                <div class="text-danger">{{ form.nombre_producto.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">{{ form.descripsion_producto.label }}</label>
+                {{ form.descripsion_producto }}
+                {% if form.descripsion_producto.errors %}
+                <div class="text-danger">{{ form.descripsion_producto.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">{{ form.categoria_producto.label }}</label>
+                    {{ form.categoria_producto }}
+                    {% if form.categoria_producto.errors %}
+                    <div class="text-danger">{{ form.categoria_producto.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">{{ form.precio_producto.label }}</label>
+                    {{ form.precio_producto }}
+                    {% if form.precio_producto.errors %}
+                    <div class="text-danger">{{ form.precio_producto.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">{{ form.stock_producto.label }}</label>
+                    {{ form.stock_producto }}
+                    {% if form.stock_producto.errors %}
+                    <div class="text-danger">{{ form.stock_producto.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Guardar
+            </button>
+
+            <a href="{% url 'productos_index' %}" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+
+    </div>
+</div>
+
+{% include 'private/footer.html' %}
