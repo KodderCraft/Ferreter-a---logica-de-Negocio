@@ -55,10 +55,13 @@
                         {% endif %}
                     </td>
                     <td>
+                        {% if producto.activo %}
+                        <!-- Editar solo tiene sentido mientras el producto
+                             esta activo: una vez desactivado, la unica
+                             accion de edicion posible es reactivarlo. -->
                         <a href="{% url 'editar_producto' producto.id %}" class="btn btn-info btn-sm">
                             Editar
                         </a>
-                        {% if producto.activo %}
                         <a href="{% url 'eliminar_producto' producto.id %}" class="btn btn-danger btn-sm">
                             Desactivar
                         </a>
