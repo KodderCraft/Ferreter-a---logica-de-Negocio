@@ -13,13 +13,17 @@
             <th>ID Venta</th>
             <td>{{ venta.id }}</td>
         </tr>
-
+          <tr class="table-active text-uppercase fw-bold" >
+            <th>Vendedor</th>
+            <td>{{ venta.empleado.nombre_empleado }} {{ venta.empleado.apellido_empleado }}</td>
+        </tr>
         <tr>
             <th>Fecha</th>
             <td>{{ venta.fecha_venta }}</td>
         </tr>
 
-        <tr>
+                  <tr class="table-active text-uppercase fw-bold" >
+
             <th>Estado</th>
             <td>{{ venta.estado_venta }}</td>
         </tr>

@@ -2,6 +2,11 @@
 {% include 'private/header.html' %}
 
 <div class="container">
+
+    <div class="page-inner">
+        
+        <a href="{% url 'registrar_venta' %}" class="btn border mt-3">Registrar Nueva Venta</a>
+    </div>
     <div class="page-inner">
 
 
@@ -34,9 +39,9 @@
             <!-- Vendedor / Empleado -->
             <td>
                 {% if venta.empleado %}
-                    {{ venta.empleado.nombre }} {{ venta.empleado.apellido }}
+                    {{ venta.empleado.nombre_empleado }} {{ venta.empleado.apellido_empleado }}
                 {% else %}
-                    <span class="text-muted">N/A</span>
+                    <span class="text-muted">Sin empleado</span>
                 {% endif %}
             </td>
 
@@ -61,6 +66,7 @@
     </tbody>
 </table>
     </div>
+
 </div>
 
 

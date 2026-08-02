@@ -2,7 +2,7 @@ from django.db import models
 from decimal import Decimal
 from productos.models import Producto  # Tu modelo original de Producto
 # from clientes.models import Cliente     # Importa tu modelo de Cliente
-# from empleados.models import Empleado
+from empleados.models import Empleado
 
 class Venta(models.Model):
     fecha_venta = models.DateTimeField(auto_now_add=True)
@@ -14,12 +14,12 @@ class Venta(models.Model):
     #     null=True, 
     #     related_name="ventas"
     # )
-    # empleado = models.ForeignKey(
-    #     Empleado, 
-    #     on_delete=models.SET_NULL, 
-    #     null=True, 
-    #     related_name="ventas"
-    # )
+    empleado = models.ForeignKey(
+        Empleado, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        related_name="ventas"
+    )
 
     ESTADO_CHOICES = [
         ('PENDIENTE', 'Pendiente'),
@@ -100,72 +100,3 @@ class DetalleVenta(models.Model):
 
     def __str__(self):
         return f"Detalle #{self.id} - Producto: {self.producto.nombre_producto} (x{self.cantidad})"
-# from django.db import models
-# from decimal import Decimal
-# from productos.models import Producto
-
-
-# class Venta(models.Model):
-#     fecha_venta = models.DateTimeField(auto_now_add=True)
-#     total_venta = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-
-#     estado_venta = models.CharField(
-#         max_length=20,
-#         choices=[
-#             ('PENDIENTE', 'Pendiente'),
-#             ('PAGADA', 'Pagada')
-#         ],
-#         default='PAGADA'
-#     )
-
-#     def __str__(self):
-#         return f"Venta #{self.id}"
-
-
-# class DetalleVenta(models.Model):
-#     venta = models.ForeignKey(
-#         Venta,
-#         on_delete=models.CASCADE,
-#         related_name='detalles'
-#     )
-
-#     producto = models.ForeignKey(
-#         Producto,
-#         on_delete=models.CASCADE
-#     )
-
-#     cantidad = models.PositiveIntegerField()
-
-#     precio_unitario = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2
-#     )
-
-#     subtotal = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2,
-#         blank=True
-#     )
-
-#     iva = models.DecimalField(
-#         max_digits=10,
-#         decimal_places=2,
-#         blank=True
-#     )
-
-#     def save(self, *args, **kwargs):
-#         self.subtotal = self.cantidad * self.precio_unitario
-#         self.iva = self.subtotal * Decimal("0.15")
-
-#         super().save(*args, **kwargs)
-
-#         total = sum(
-#             detalle.subtotal + detalle.iva
-#             for detalle in self.venta.detalles.all()
-#         )
-
-#         self.venta.total_venta = total
-#         self.venta.save()
-
-#     def __str__(self):
-#         return f"Detalle #{self.id} - Venta #{self.venta.id}"
