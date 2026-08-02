@@ -20,4 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('ventas.urls')),
+    # CRUD del inventario de productos, bajo el prefijo 'productos/'.
+    path('productos/', include('productos.urls')),
 ]
