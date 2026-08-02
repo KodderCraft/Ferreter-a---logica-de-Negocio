@@ -2,14 +2,20 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
 
 # Django
 *.log
 
+# Base de datos temporal SQLite
+*.sqlite3-journal
 
 # Entornos virtuales
 venv/
 env/
+.venv/
 
 # Editor
 .vscode/
