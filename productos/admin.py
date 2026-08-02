@@ -19,7 +19,8 @@ class ProductoAdmin(admin.ModelAdmin):
         "stock_producto",
         "ventas_producto",
         "activo",
+        "oculto",
     )
-    list_filter = ("activo", "categoria_producto")
+    list_filter = ("activo", "oculto", "categoria_producto")
     search_fields = ("nombre_producto",)
-    list_editable = ("activo",)
+    list_editable = ("activo", "oculto")

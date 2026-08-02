@@ -66,6 +66,12 @@
                         <a href="{% url 'activar_producto' producto.id %}" class="btn btn-success btn-sm">
                             Activar
                         </a>
+                        <!-- Solo aparece una vez que el producto ya esta
+                             desactivado: oculta la fila del listado sin
+                             tocar la base de datos (ver ocultar_producto). -->
+                        <a href="{% url 'ocultar_producto' producto.id %}" class="btn btn-dark btn-sm">
+                            Eliminar
+                        </a>
                         {% endif %}
                     </td>
                 </tr>

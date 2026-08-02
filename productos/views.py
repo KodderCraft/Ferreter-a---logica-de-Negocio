@@ -8,15 +8,17 @@ from .models import Producto
 
 def productos_index(request):
     """
-    Lista (Read) todos los productos, activos e inactivos.
+    Lista (Read) los productos que no fueron ocultados.
 
-    El campo 'activo' no se usa para filtrar aqui: la idea es que
-    esta pantalla sea el panel de control completo del inventario,
-    y sea la plantilla la que distinga visualmente (con un badge)
-    cuales productos estan disponibles para la venta y cuales fueron
-    desactivados (ver 'eliminar_producto' mas adelante en este archivo).
+    El campo 'activo' no se usa para filtrar aqui a proposito: la idea
+    es que esta pantalla siga mostrando tanto los productos disponibles
+    para la venta como los desactivados (la plantilla los distingue con
+    un badge), para poder reactivarlos facilmente. 'oculto' es distinto:
+    un producto oculto ya no aparece en esta lista para nada (ver
+    'ocultar_producto' mas abajo), aunque su fila sigue intacta en la
+    base de datos -- solo se puede volver a ver desde /admin/.
     """
-    productos = Producto.objects.all().order_by("-id")
+    productos = Producto.objects.filter(oculto=False).order_by("-id")
     return render(request, "productos/productos_index.html", {"productos": productos})
 
 
@@ -117,3 +119,26 @@ def activar_producto(request, id):
     producto.save()
     messages.success(request, f"El producto '{producto.nombre_producto}' fue reactivado.")
     return redirect("productos_index")
+
+
+def ocultar_producto(request, id):
+    """
+    Boton "Eliminar" de la lista -- solo visible para productos ya
+    desactivados (ver productos_index.html). Igual que eliminar_producto,
+    NUNCA llama producto.delete(): solo pone oculto=True, que hace que
+    productos_index deje de traerlo en su queryset. La fila sigue
+    completa en la base de datos (recuperable desde /admin/, ver
+    ProductoAdmin en admin.py) para no perder su historial de ventas.
+
+    GET: muestra una pantalla de confirmacion.
+    POST: pone oculto=True y redirige al listado.
+    """
+    producto = get_object_or_404(Producto, id=id)
+
+    if request.method == "POST":
+        producto.oculto = True
+        producto.save()
+        messages.success(request, f"El producto '{producto.nombre_producto}' fue eliminado de la lista.")
+        return redirect("productos_index")
+
+    return render(request, "productos/producto_confirm_ocultar.html", {"producto": producto})

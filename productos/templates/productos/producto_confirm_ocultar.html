@@ -1,0 +1,36 @@
+{% load static %}
+{% include 'private/header.html' %}
+
+<div class="container">
+    <div class="page-inner">
+
+        <h3>Eliminar Producto</h3>
+        <br>
+
+        <p>
+            ¿Seguro que deseas eliminar
+            <strong>{{ producto.nombre_producto }}</strong> de esta lista?
+        </p>
+        <p class="text-muted">
+            Esto NO borra el producto de la base de datos ni su historial
+            de ventas: solo deja de aparecer aqui. Si necesitas
+            recuperarlo, se puede hacer desde el panel de administracion
+            (/admin/).
+        </p>
+
+        <!-- Igual que producto_confirm_delete.html: POST real para que
+             la accion siempre pase por una confirmacion explicita. -->
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                Si, eliminar de la lista
+            </button>
+            <a href="{% url 'productos_index' %}" class="btn btn-secondary">
+                Cancelar
+            </a>
+        </form>
+
+    </div>
+</div>
+
+{% include 'private/footer.html' %}
