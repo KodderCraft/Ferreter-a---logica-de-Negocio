@@ -76,3 +76,44 @@ def editar_producto(request, id):
         "productos/producto_form.html",
         {"form": form, "titulo": f"Editar Producto: {producto.nombre_producto}"},
     )
+
+
+def eliminar_producto(request, id):
+    """
+    "Elimina" (Delete) un producto -- en realidad lo desactiva.
+
+    Nunca se llama producto.delete(): Producto tiene un ForeignKey desde
+    DetalleVenta con on_delete=CASCADE, asi que borrar de verdad un
+    producto con ventas asociadas destruiria ese historial de ventas.
+    En su lugar, este CRUD usa el campo 'activo' que ya existia en el
+    modelo (y que 'ventas.views.registrar_venta' ya usa para filtrar
+    el combo de productos disponibles): desactivar un producto hace que
+    deje de ofrecerse para nuevas ventas, sin tocar lo ya vendido.
+
+    GET: muestra una pantalla de confirmacion.
+    POST: pone activo=False y redirige al listado.
+    """
+    producto = get_object_or_404(Producto, id=id)
+
+    if request.method == "POST":
+        producto.activo = False
+        producto.save()
+        messages.success(request, f"El producto '{producto.nombre_producto}' fue desactivado.")
+        return redirect("productos_index")
+
+    return render(request, "productos/producto_confirm_delete.html", {"producto": producto})
+
+
+def activar_producto(request, id):
+    """
+    Reactiva un producto previamente desactivado (activo=True).
+
+    Es un toggle simple via GET+redirect, igual que
+    'ventas.views.cambiar_estado_venta': no hace falta pantalla de
+    confirmacion porque reactivar no tiene ningun efecto destructivo.
+    """
+    producto = get_object_or_404(Producto, id=id)
+    producto.activo = True
+    producto.save()
+    messages.success(request, f"El producto '{producto.nombre_producto}' fue reactivado.")
+    return redirect("productos_index")
