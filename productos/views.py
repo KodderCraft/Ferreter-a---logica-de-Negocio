@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from .forms import ProductoForm
@@ -46,4 +46,33 @@ def crear_producto(request):
         request,
         "productos/producto_form.html",
         {"form": form, "titulo": "Nuevo Producto"},
+    )
+
+
+def editar_producto(request, id):
+    """
+    Actualiza (Update) un producto existente.
+
+    Reusa exactamente el mismo template que crear_producto
+    (producto_form.html); la unica diferencia es que el form se crea
+    con 'instance=producto' para que salga precargado, y que al guardar
+    no se toca 'fecha_producto' (esa fecha es la de creacion, no la de
+    la ultima edicion).
+    """
+    producto = get_object_or_404(Producto, id=id)
+
+    if request.method == "POST":
+        form = ProductoForm(request.POST, instance=producto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"¡Producto '{producto.nombre_producto}' actualizado exitosamente!")
+            return redirect("productos_index")
+        messages.error(request, "Revisa los datos del formulario, hay errores.")
+    else:
+        form = ProductoForm(instance=producto)
+
+    return render(
+        request,
+        "productos/producto_form.html",
+        {"form": form, "titulo": f"Editar Producto: {producto.nombre_producto}"},
     )
