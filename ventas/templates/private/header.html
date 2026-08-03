@@ -142,6 +142,30 @@
                   </ul>
                 </div>
               </li>
+
+                <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#clientesMenu" class="collapsed">
+                  <i class="fas fa-luggage-cart"></i>
+                  <p>CLIENTES</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="clientesMenu">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="{% url 'lista_clientes' %}">
+                        <span class="sub-item">LISTAR CLIENTES</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="{% url 'crear_cliente' %}">
+                        <span class="sub-item">NUEVO CLIENTE</span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                </div>
+              </li>
+
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#tables" class="collapsed">
                   <i class="fas fa-th-list"></i>

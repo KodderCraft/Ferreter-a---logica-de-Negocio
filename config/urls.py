@@ -19,4 +19,7 @@ urlpatterns = [
 
     # Módulo de productos
     path('productos/', include('productos.urls')),
+
+    # Módulo de clientes
+    path('clientes/', include('clientes.urls')),
 ]
