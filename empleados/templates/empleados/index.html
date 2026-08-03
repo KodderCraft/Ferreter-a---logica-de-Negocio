@@ -1,257 +1,253 @@
-{% extends 'base.html' %}
+{% load static %}
+{% include 'private/header.html' %}
 
-{% block titulo %}
-Gestión de Empleados
-{% endblock %}
+<div class="container">
+    <div class="page-inner">
+        <div class="d-flex justify-content-between align-items-center mb-4">
 
-{% block contenido %}
+            <h2 class="mb-0">
+                <i class="bi bi-people-fill"></i>
+                Gestión de Empleados
+            </h2>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-
-    <h2 class="mb-0">
-        <i class="bi bi-people-fill"></i>
-        Gestión de Empleados
-    </h2>
-
-    <a href="{% url 'crear_empleado' %}" class="btn btn-primary">
-        <i class="bi bi-person-plus-fill"></i>
-        Agregar Empleado
-    </a>
-
-</div>
-
-<form method="GET" class="mb-4">
-
-    <div class="row mb-4">
-
-    <div class="col-md-4">
-
-        <div class="card text-center shadow-sm border-primary">
-
-            <div class="card-body">
-
-                <h5 class="card-title">
-                    <i class="bi bi-people-fill text-primary"></i>
-                    Total Empleados
-                </h5>
-
-                <h2>{{ total_empleados }}</h2>
-
-            </div>
+            <a href="{% url 'crear_empleado' %}" class="btn btn-primary">
+                <i class="bi bi-person-plus-fill"></i>
+                Agregar Empleado
+            </a>
 
         </div>
 
-    </div>
+        <form method="GET" class="mb-4">
 
-    <div class="col-md-4">
+            <div class="row mb-4">
 
-        <div class="card text-center shadow-sm border-success">
+                <div class="col-md-4">
 
-            <div class="card-body">
+                    <div class="card text-center shadow-sm border-primary">
 
-                <h5 class="card-title">
-                    <i class="bi bi-person-check-fill text-success"></i>
-                    Activos
-                </h5>
+                        <div class="card-body">
 
-                <h2>{{ empleados_activos }}</h2>
+                            <h5 class="card-title">
+                                <i class="bi bi-people-fill text-primary"></i>
+                                Total Empleados
+                            </h5>
+
+                            <h2>{{ total_empleados }}</h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card text-center shadow-sm border-success">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                <i class="bi bi-person-check-fill text-success"></i>
+                                Activos
+                            </h5>
+
+                            <h2>{{ empleados_activos }}</h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card text-center shadow-sm border-danger">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                <i class="bi bi-person-x-fill text-danger"></i>
+                                Inactivos
+                            </h5>
+
+                            <h2>{{ empleados_inactivos }}</h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
 
             </div>
 
-        </div>
+        </form>
 
-    </div>
+        {% if empleados %}
 
-    <div class="col-md-4">
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Cédula</th>
+                    <!-- <th>Cargo</th> -->
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
 
-        <div class="card text-center shadow-sm border-danger">
+            <tbody>
 
-            <div class="card-body">
+                {% for empleado in empleados %}
 
-                <h5 class="card-title">
-                    <i class="bi bi-person-x-fill text-danger"></i>
-                    Inactivos
-                </h5>
+                <tr>
 
-                <h2>{{ empleados_inactivos }}</h2>
+                    <td>{{ empleado.id_empleado }}</td>
+                    <td>{{ empleado.nombre_empleado }}</td>
+                    <td>{{ empleado.apellido_empleado }}</td>
+                    <td>{{ empleado.cedula_empleado }}</td>
+                    <!-- <td>{{ empleado.cargo_empleado }}</td> -->
 
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-</form>
-
-{% if empleados %}
-
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Cédula</th>
-            <th>Cargo</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-    {% for empleado in empleados %}
-
-        <tr>
-
-            <td>{{ empleado.id_empleado }}</td>
-            <td>{{ empleado.nombre_empleado }}</td>
-            <td>{{ empleado.apellido_empleado }}</td>
-            <td>{{ empleado.cedula_empleado }}</td>
-            <td>{{ empleado.cargo_empleado }}</td>
-
-            <td>
-                {% if empleado.activo %}
-                    <span class="badge bg-success"></span>
+                    <td>
+                        {% if empleado.activo %}
+                        <span class="badge bg-success"></span>
                         Activo
-                     </span>
+                        </span>
+                        {% else %}
+                        <span class="badge bg-danger"></span>
+                        Inactivo
+                        </span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        <a href="{% url 'editar_empleado' empleado.id_empleado %}" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil-square"></i>
+                            Editar
+                        </a>
+
+                        <a href="#" class="btn btn-danger btn-sm btn-eliminar"
+                            data-url="{% url 'eliminar_empleado' empleado.id_empleado %}">
+                            <i class="bi bi-trash-fill"></i>
+                            Eliminar
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+        <nav class="mt-4">
+
+            <ul class="pagination justify-content-center">
+
+                {% if empleados.has_previous %}
+
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?page={{ empleados.previous_page_number }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}">
+                        Anterior
+                    </a>
+                </li>
+
                 {% else %}
-                     <span class="badge bg-danger"></span>
-                    Inactivo
-                </span>
+
+                <li class="page-item disabled">
+                    <span class="page-link">Anterior</span>
+                </li>
+
                 {% endif %}
-            </td>
 
-            <td>
+                {% for pagina in empleados.paginator.page_range %}
 
-                <a href="{% url 'editar_empleado' empleado.id_empleado %}"
-                   class="btn btn-warning btn-sm">
-                   <i class="bi bi-pencil-square"></i>
-                    Editar
-                </a>
-
-                <a href="#"
-                   class="btn btn-danger btn-sm btn-eliminar"
-                    data-url="{% url 'eliminar_empleado' empleado.id_empleado %}">
-                    <i class="bi bi-trash-fill"></i>
-                    Eliminar
-                </a>
-
-            </td>
-
-        </tr>
-
-    {% endfor %}
-
-    </tbody>
-
-</table>
-<nav class="mt-4">
-
-    <ul class="pagination justify-content-center">
-
-        {% if empleados.has_previous %}
-
-            <li class="page-item">
-                <a class="page-link"
-                   href="?page={{ empleados.previous_page_number }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}">
-                    Anterior
-                </a>
-            </li>
-
-        {% else %}
-
-            <li class="page-item disabled">
-                <span class="page-link">Anterior</span>
-            </li>
-
-        {% endif %}
-
-        {% for pagina in empleados.paginator.page_range %}
-
-            {% if empleados.number == pagina %}
+                {% if empleados.number == pagina %}
 
                 <li class="page-item active">
                     <span class="page-link">{{ pagina }}</span>
                 </li>
 
-            {% else %}
+                {% else %}
 
                 <li class="page-item">
                     <a class="page-link"
-                       href="?page={{ pagina }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}">
+                        href="?page={{ pagina }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}">
                         {{ pagina }}
                     </a>
                 </li>
 
-            {% endif %}
+                {% endif %}
 
-        {% endfor %}
+                {% endfor %}
 
-        {% if empleados.has_next %}
+                {% if empleados.has_next %}
 
-            <li class="page-item">
-                <a class="page-link"
-                   href="?page={{ empleados.next_page_number }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}">
-                    Siguiente
-                </a>
-            </li>
+                <li class="page-item">
+                    <a class="page-link"
+                        href="?page={{ empleados.next_page_number }}{% if request.GET.buscar %}&buscar={{ request.GET.buscar }}{% endif %}">
+                        Siguiente
+                    </a>
+                </li>
 
+                {% else %}
+
+                <li class="page-item disabled">
+                    <span class="page-link">Siguiente</span>
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </nav>
         {% else %}
 
-            <li class="page-item disabled">
-                <span class="page-link">Siguiente</span>
-            </li>
+        <div class="alert alert-info">
+            No existen empleados registrados.
+        </div>
 
         {% endif %}
 
-    </ul>
 
-</nav>
-{% else %}
+    </div>
 
-<div class="alert alert-info">
-    No existen empleados registrados.
 </div>
 
-{% endif %}
-
-{% endblock %}
-{% block extra_js %}
-
+{% include 'private/footer.html' %}
 <script>
 
-document.querySelectorAll('.btn-eliminar').forEach(function(boton){
+    document.querySelectorAll('.btn-eliminar').forEach(function (boton) {
 
-    boton.addEventListener('click', function(){
+        boton.addEventListener('click', function () {
 
-        const url = this.dataset.url;
+            const url = this.dataset.url;
 
-        Swal.fire({
-            title: '¿Eliminar empleado?',
-            text: 'Esta acción no se puede deshacer.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result)=>{
+            Swal.fire({
+                title: '¿Eliminar empleado?',
+                text: 'Esta acción no se puede deshacer.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
 
-            if(result.isConfirmed){
+                if (result.isConfirmed) {
 
-                window.location.href = url;
+                    window.location.href = url;
 
-            }
+                }
+
+            });
 
         });
 
     });
 
-});
-
 </script>
-
-{% endblock %}
